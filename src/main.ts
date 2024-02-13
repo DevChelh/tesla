@@ -3,6 +3,7 @@ import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { setupWorker } from 'msw/browser';
 import {http, HttpResponse} from 'msw';
+import { CarModel } from './app/Interfaces/CardModel.interface';
 
 bootstrapApplication(AppComponent, appConfig)
   .catch((err) => console.error(err));
