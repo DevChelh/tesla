@@ -13,14 +13,14 @@ import { CarImageComponent } from "../carImages/card-image.component";
     standalone: true,
     imports: [ AsyncPipe, JsonPipe, NgIf, NgFor, ReactiveFormsModule, CurrencyPipe, NavigationComponent, CarImageComponent ],
     template: `
-    <form [formGroup]="modeleForm">
+    <form [formGroup]="form">
           <h2>Step 1 : Choose yout Model and color</h2>
 
           
             <label for="modelSelect">Modeles</label>
             <select formControlName="selectedModel" id="modelSelect">
-              <option value="">Choose</option>
-              @for (model of models; track $index) {
+              <option value="" disabled>Choose</option>
+              @for (model of carModels; track $index) {
                 <option  [ngValue]="model">{{ model.description }}</option>
               }
             </select>
@@ -39,7 +39,7 @@ import { CarImageComponent } from "../carImages/card-image.component";
           }
 
           @if ( colors ) {
-            <app-car-image [codeModel]="modeleForm.get('selectedModel')?.value.code" [codeColor]="modeleForm.get('selectedColor')?.value.code"></app-car-image>
+            <app-car-image [codeModel]="form.get('selectedModel')?.value.code" [codeColor]="form.get('selectedColor')?.value.code"></app-car-image>
           }
     </form>
     `
@@ -49,38 +49,49 @@ export class Step1Component implements OnInit {
 
   private CarService = inject(CarService)
   
-  public modeleForm = this.CarService.modeleForm;
-  public models = this.CarService.models; // Permet de gerer le retour, et gere le service comme un store
+  public form = this.CarService.modeleForm;
+  public carModels!: CarModel[];
   public colors!: CarColors[]
   public configs!: CarConfig; 
-  public selectColors: any; 
   
   ngOnInit(): void {
-
-      if ( this.CarService.models.length < 1 ){
-        this.CarService.getModels().pipe(
-          tap(
-            (data: CarModel[]) => {
-              this.CarService.models = data
-              this.models = data
-            }
-          )
-        ).subscribe();
-      }
+    
+    if ( this.CarService.carModels.length < 1 )
+    {
+      this.CarService.getModels().pipe(
+        tap(
+          (data: CarModel[]) => {
+            this.CarService.carModels = data
+            this.carModels = this.CarService.carModels
+          }
+        )
+      ).subscribe();
+    } else {
+      this.carModels = this.CarService.carModels
+      console.log(this.carModels)
+    };
       
-      this.colors = this.modeleForm.get('selectedModel')?.value.colors // Permet de garder la couleur pour l'image et la selection
+    this.colors = this.form.get('selectedModel')?.value.colors;
 
-       this.modeleForm.get('selectedModel')?.valueChanges.pipe(
-        map( (value) => {
+    this.form.get('selectedModel')?.valueChanges.pipe(
+      tap( (value) => {
+            this.colors = value.colors 
+            this.form.get('selectedColor')?.setValue(value.colors[0])
+            this.form.get('selectConfigs')?.reset()
 
-          this.colors = value.colors 
-          const code = value.code
-          this.modeleForm.get('selectedColor')?.setValue(value.colors[0]) // selectionne par defaut le premier element de la liste 
-          this.modeleForm.get('selectConfigs')?.reset() // Remet à 0 les valeurs des options
-          
-          return code
-        } )
-       ).subscribe()   
-    }
+            if(this.form.get('configCar')?.value.id !== 0)
+            {
+              const valueReset = {id: 0, description: '', price: 0, range: 0, speed: 0}
+              this.form.get('configCar')?.setValue(valueReset)
+
+              if(this.CarService.carConfigs != undefined){
+                this.CarService.carConfigs = undefined
+              }
+
+            }
+          } 
+        )
+      ).subscribe();
+  }
 
 }

@@ -9,8 +9,10 @@ import { Observable } from 'rxjs';
 })
 export class CarService {
 
-    modeleForm!: FormGroup;
-    models: CarModel[] = [];
+    public modeleForm!: FormGroup;
+    public carModels: CarModel[] = [];
+    public carConfigs!: CarConfig | undefined;
+    public carDetailsConfig!: CarDetailsConfigs;
 
     constructor(private formBuilder: FormBuilder, private http: HttpClient){
         this.modeleForm = this.formBuilder.group({
@@ -33,7 +35,4 @@ export class CarService {
     getConfig(code: string): Observable<CarConfig> {
         return this.http.get<CarConfig>('/options/' + code)
       }
-
-      
-
 }

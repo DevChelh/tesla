@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { NavigationComponent } from "../navigation/navigation.component";
 import { ActivatedRoute } from "@angular/router";
 import { CarImageComponent } from "../carImages/card-image.component";
-import { map, switchMap, tap } from "rxjs";
+import { Observable, map, switchMap, tap } from "rxjs";
 
 
 @Component({
@@ -21,7 +21,7 @@ import { map, switchMap, tap } from "rxjs";
                     <label for="configSelect">Config</label>
                     <select formControlName="configCar" id="configSelect">
                     @for (confi of configs.configs; track $index; ) {
-                    <option [ngValue]="confi">{{ confi.description }} </option>
+                    <option [ngValue]="confi" >{{ confi.description }} </option>
                     }
                     </select>
 
@@ -54,34 +54,18 @@ import { map, switchMap, tap } from "rxjs";
 export class Step2Component {
 
     private CarService = inject(CarService)
-    private activa= inject(ActivatedRoute)
+    private route= inject(ActivatedRoute)
 
     public modeleForm = this.CarService.modeleForm;
-    public configs!: CarConfig;
+    public configs = this.CarService.carConfigs;
     public carDetailsConfig!: CarDetailsConfigs;
   
     ngOnInit(): void {
 
-      this.activa.paramMap.pipe(
-        map( data => {
-          const id = data.get("id")
-          return id
-        }),
-          switchMap((id: any) => { 
-            return this.CarService.getConfig(id).pipe(
-              tap(
-                (data: CarConfig) => {
-                  if (data) {
-                    this.configs = data
-                    this.modeleForm.get('configs')?.setValue(data),
-                    this.carDetailsConfig = data.configs[0];
-                    this.modeleForm.get('configCar')?.setValue(this.carDetailsConfig);
-                  }
-                }
-              )
-            );
-          }))
-          .subscribe()
+      this.route.paramMap.pipe(
+        map(data => data.get("id") as string),
+        switchMap((id: string) => this.getConfig(id))
+      ).subscribe();
 
       this.modeleForm = this.CarService.modeleForm;
       this.carDetailsConfig = this.modeleForm.get('configCar')?.value
@@ -89,8 +73,26 @@ export class Step2Component {
       this.modeleForm.get('configCar')?.valueChanges.subscribe(
         (configs) => {
           this.carDetailsConfig = configs
+          console.log(this.carDetailsConfig)
         }
       )
+    }
+
+    getConfig(id: string): Observable<CarConfig>{
+      return this.CarService.getConfig(id).pipe(
+        tap(
+          (data: CarConfig) => {
+            if (this.CarService.carConfigs === undefined) {
+              this.configs = data;
+              this.CarService.carConfigs = data;
+              this.modeleForm.get('configs')?.setValue(data),
+                this.carDetailsConfig = data.configs[0];
+              this.CarService.carDetailsConfig;
+              this.modeleForm.get('configCar')?.setValue(this.carDetailsConfig);
+            }
+          }
+        )
+      );
     }
 
 }
