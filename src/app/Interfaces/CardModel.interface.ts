@@ -11,12 +11,12 @@ export interface CarColors {
 }
 
 export interface CarConfig {
-  configs: CarConfigs[], 
+  configs: CarDetailsConfigs[], 
   towHitch: boolean,
   yoke: boolean
 }
 
-export interface CarConfigs {
+export interface CarDetailsConfigs {
     id: number, 
     description: string, 
     range: number, 
