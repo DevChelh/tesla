@@ -4,7 +4,7 @@ import { CarService } from "../../Services/Car.service";
 import { AsyncPipe, CurrencyPipe, JsonPipe, NgFor, NgIf } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { NavigationComponent } from "../navigation/navigation.component";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { CarImageComponent } from "../carImages/card-image.component";
 import { map, switchMap, tap } from "rxjs";
 
@@ -15,7 +15,7 @@ import { map, switchMap, tap } from "rxjs";
     imports: [AsyncPipe, JsonPipe, NgIf, NgFor, ReactiveFormsModule, CurrencyPipe, NavigationComponent, CarImageComponent],
     template: `
                 <form [formGroup]="modeleForm">
-                  <h2>Options pour le modèle</h2>
+                  <h2>Step 2: Select your config and options</h2>
 
                   @if( configs ) {
                     <label for="configSelect">Config</label>

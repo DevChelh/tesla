@@ -1,5 +1,5 @@
 import { Component, inject,} from "@angular/core";
-import { Router, RouterLink } from "@angular/router";
+import { RouterLink } from "@angular/router";
 import { CarService } from "../../Services/Car.service";
 import { CarModel } from "../../Interfaces/CardModel.interface";
 
@@ -12,7 +12,7 @@ import { CarModel } from "../../Interfaces/CardModel.interface";
     <nav class="navbar navbar-expand-lg">
         <div class="container">
 
-                <button class="card" routerLinkActive="active"  id="step1">Step 1</button>
+                <button class="card" routerLink="/step1"  id="step1">Step 1</button>
                 <button class="card"  [routerLink]="(['option/', code])" id="step2">Step 2</button>
                 <button class="card"  id="step3" routerLink="/step3"> Step 3</button>
 

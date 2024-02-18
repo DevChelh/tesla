@@ -1,11 +1,10 @@
-import { Component, Inject, inject } from "@angular/core";
-import { CarColors, CarConfig, CarDetailsConfigs, CarModel } from "../../Interfaces/CardModel.interface";
-import { map, tap } from "rxjs";
+import { Component, inject } from "@angular/core";
+import { CarColors, CarDetailsConfigs, CarModel } from "../../Interfaces/CardModel.interface";
 import { CarService } from "../../Services/Car.service";
 import { AsyncPipe, CurrencyPipe, JsonPipe, NgFor, NgIf } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
 import { NavigationComponent } from "../navigation/navigation.component";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Router } from "@angular/router";
 import { CarImageComponent } from "../carImages/card-image.component";
 
 
@@ -15,7 +14,7 @@ import { CarImageComponent } from "../carImages/card-image.component";
     imports: [AsyncPipe, JsonPipe, NgIf, NgFor, ReactiveFormsModule, CurrencyPipe, NavigationComponent, CarImageComponent],
     template: `
     <table>
-    <legend>Step 3 Summary</legend>
+    <legend>Step 3: Summary</legend>
     <h2> Your Tesla {{ yourTesla }} </h2>
     <tbody style="padding: 10px;">
         <tr>

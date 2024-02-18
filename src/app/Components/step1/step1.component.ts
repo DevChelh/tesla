@@ -1,6 +1,6 @@
-import { Component, OnInit, SimpleChanges, inject } from "@angular/core";
+import { Component, OnInit, inject } from "@angular/core";
 import { CarColors, CarConfig, CarModel } from "../../Interfaces/CardModel.interface";
-import { Observable, map, switchMap, tap } from "rxjs";
+import { map, tap } from "rxjs";
 import { CarService } from "../../Services/Car.service";
 import { AsyncPipe, CurrencyPipe, JsonPipe, NgFor, NgIf } from "@angular/common";
 import { ReactiveFormsModule } from "@angular/forms";
@@ -14,7 +14,7 @@ import { CarImageComponent } from "../carImages/card-image.component";
     imports: [ AsyncPipe, JsonPipe, NgIf, NgFor, ReactiveFormsModule, CurrencyPipe, NavigationComponent, CarImageComponent ],
     template: `
     <form [formGroup]="modeleForm">
-          <h2>Options pour le modèle</h2>
+          <h2>Step 1 : Choose yout Model and color</h2>
 
           
             <label for="modelSelect">Modeles</label>
